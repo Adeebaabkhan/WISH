@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#6B8E23">
+    <title>Wish Shoppe Tracker - Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6B8E23;
+            --primary-dark: #556B2F;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #6B8E23 0%, #556B2F 100%);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.2);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--gradient-1);
+            min-height: 100vh;
+            padding: 15px;
+            color: var(--dark);
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: white;
+            border-radius: 15px;
+            padding: 15px 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: var(--gradient-2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-details h3 {
+            font-size: 0.95em;
+            color: var(--dark);
+        }
+
+        .user-details p {
+            font-size: 0.75em;
+            color: #666;
+        }
+
+        .user-role {
+            display: inline-block;
+            padding: 3px 8px;
+            background: var(--primary);
+            color: white;
+            border-radius: 5px;
+            font-size: 0.7em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-admin {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-logout {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-small:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Header */
+        .app-header {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--gradient-2);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .app-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            box-shadow: var(--shadow-md);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .header-text h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Dashboard Stats */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card:hover::before {
+            width: 100%;
+            opacity: 0.05;
+        }
+
+        .stat-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .stat-label {
+            font-size: 0.75em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Form Section */
+        .form-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 25px;
+            background: var(--gradient-2);
+            border-radius: 2px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(107, 142, 35, 0.1);
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--gradient-2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        /* Table Section */
+        .table-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .table-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding-left: 45px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+            color: #999;
+        }
+
+        .filter-btn {
+            padding: 12px 20px;
+            background: var(--light);
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        thead {
+            background: var(--gradient-2);
+            color: white;
+        }
+
+        th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75em;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e9ecef;
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        td {
+            padding: 16px 12px;
+            color: #555;
+        }
+
+        .amount-cell {
+            font-weight: 700;
+            color: var(--success);
+            font-size: 1.1em;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-right: 5px;
+        }
+
+        .edit-btn {
+            background: #e3f2fd;
+            color: var(--info);
+        }
+
+        .edit-btn:hover {
+            background: var(--info);
+            color: white;
+        }
+
+        .delete-btn {
+            background: #ffe5e5;
+            color: var(--danger);
+        }
+
+        .delete-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            font-size: 1.5em;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+
+        .close-btn:hover {
+            color: var(--danger);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(400px);
+            transition: var(--transition);
+            z-index: 1000;
+            max-width: 350px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            font-size: 1.5em;
+        }
+
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.info { border-left: 4px solid var(--info); }
+
+        /* User Management Table */
+        .user-table {
+            margin-top: 20px;
+        }
+
+        .user-table table {
+            font-size: 0.9em;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .role-admin {
+            background: #e3f2fd;
+            color: var(--info);
+        }
+
+        .role-user {
+            background: #e8f5e9;
+            color: var(--success);
+        }
+
+        /* Responsive */
+        @media (min-width: 640px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .btn-group {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .form-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .header-text h1 {
+                font-size: 2.2em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        /* Hide for non-admin */
+        .admin-only {
+            display: none;
+        }
+
+        body.is-admin .admin-only {
+            display: block;
+        }
+
+        body.is-admin .admin-only.inline {
+            display: inline-block;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <div class="user-details">
+                    <h3 id="userName">User Name</h3>
+                    <p><span class="user-role" id="userRole">USER</span></p>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <button class="btn-small btn-admin admin-only" onclick="openAdminPanel()">
+                    ⚙️ Admin Panel
+                </button>
+                <button class="btn-small btn-logout" onclick="logout()">
+                    🚪 Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="app-header">
+            <div class="header-content">
+                <div class="app-icon">🏪</div>
+                <div class="header-text">
+                    <h1>Wish Shoppe Tracker</h1>
+                    <p>Smart Sales & Salary Management System</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <div class="dashboard">
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-label">Total Sales</div>
+                <div class="stat-value" id="totalSales">₱0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-label">Today's Sales</div>
+                <div class="stat-value" id="todaySales">₱0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-label">Transactions</div>
+                <div class="stat-value" id="totalTransactions">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-label">Average Sale</div>
+                <div class="stat-value" id="avgSale">₱0.00</div>
+            </div>
+        </div>
+
+        <!-- Add Sale Form -->
+        <div class="form-section">
+            <div class="section-title">
+                ➕ Add New Sale
+            </div>
+            <form id="saleForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>📅 Date</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>👤 Admin</label>
+                        <input type="text" id="adminName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>🛍️ Item</label>
+                        <select id="item" required>
+                            <option value="">Select Item</option>
+                            <option value="Cabcut 1m solo">Cabcut 1m solo</option>
+                            <option value="Cabcut 70 solo">Cabcut 70 solo</option>
+                            <option value="Cabcut 1m shared">Cabcut 1m shared</option>
+                            <option value="Cabcut 70 duo">Cabcut 70 duo</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>💵 Amount (₱)</label>
+                        <input type="number" id="amount" step="0.01" placeholder="0.00" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>📝 Notes (Optional)</label>
+                    <textarea id="notes" rows="2" placeholder="Add any additional notes..."></textarea>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">
+                        <span>💾</span> Add Sale
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="exportToCSV()">
+                        <span>📥</span> Export CSV
+                    </button>
+                    <button type="button" class="btn btn-danger admin-only" onclick="clearAllData()">
+                        <span>🗑️</span> Clear All
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sales Table -->
+        <div class="table-section">
+            <div class="section-title">
+                📋 Sales Records
+            </div>
+            <div class="table-controls">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Search by admin, item, or date...">
+                </div>
+                <button class="filter-btn active" onclick="filterSales('all')">All</button>
+                <button class="filter-btn" onclick="filterSales('today')">Today</button>
+                <button class="filter-btn" onclick="filterSales('week')">This Week</button>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Admin</th>
+                            <th>Item</th>
+                            <th>Amount</th>
+                            <th>Notes</th>
+                            <th class="admin-only">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesBody">
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <div class="empty-icon">📭</div>
+                                <h3>No sales recorded yet</h3>
+                                <p>Start by adding your first sale above</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ Admin Panel</h2>
+                <button class="close-btn" onclick="closeAdminPanel()">&times;</button>
+            </div>
+
+            <div class="section-title" style="font-size: 1.1em;">
+                👥 User Management
+            </div>
+
+            <!-- Add User Form -->
+            <form id="addUserForm" style="margin-bottom: 30px;">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="newUsername" required placeholder="Enter username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="newPassword" required placeholder="Enter password">
+                    </div>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="newName" required placeholder="Full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="newRole" required>
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">
+                    ➕ Add User
+                </button>
+            </form>
+
+            <!-- Users Table -->
+            <div class="user-table">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Sale Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ Edit Sale</h2>
+                <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+
+            <form id="editSaleForm">
+                <input type="hidden" id="editSaleId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>📅 Date</label>
+                        <input type="date" id="editDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>👤 Admin</label>
+                        <input type="text" id="editAdmin" required>
+                    </div>
+                    <div class="form-group">
+                        <label>🛍️ Item</label>
+                        <select id="editItem" required>
+                            <option value="Cabcut 1m solo">Cabcut 1m solo</option>
+                            <option value="Cabcut 70 solo">Cabcut 70 solo</option>
+                            <option value="Cabcut 1m shared">Cabcut 1m shared</option>
+                            <option value="Cabcut 70 duo">Cabcut 70 duo</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>💵 Amount (₱)</label>
+                        <input type="number" id="editAmount" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>📝 Notes</label>
+                    <textarea id="editNotes" rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">
+                    💾 Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-icon" id="toastIcon"></span>
+        <div id="toastMessage"></div>
+    </div>
+
+    <script>
+        // Check authentication
+        if (sessionStorage.getItem('wishShoppeLoggedIn') !== 'true') {
+            window.location.href = 'index.html';
+        }
+
+        // Get current user info
+        const currentUser = sessionStorage.getItem('wishShoppeUser');
+        const currentRole = sessionStorage.getItem('wishShoppeRole');
+        const currentName = sessionStorage.getItem('wishShoppeName');
+
+        // Set user info in UI
+        document.getElementById('userName').textContent = currentName;
+        document.getElementById('userRole').textContent = currentRole.toUpperCase();
+        document.getElementById('userAvatar').textContent = currentName.charAt(0).toUpperCase();
+        document.getElementById('adminName').value = currentName;
+
+        // Show admin features if user is admin
+        if (currentRole === 'admin') {
+            document.body.classList.add('is-admin');
+        }
+
+        // Initialize sales data
+        let sales = JSON.parse(localStorage.getItem('wishShoppeSales')) || [];
+        let currentFilter = 'all';
+
+        // Set today's date
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Load data
+        displaySales();
+        updateStats();
+
+        // Add Sale Form
+        document.getElementById('saleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const sale = {
+                id: Date.now(),
+                date: document.getElementById('date').value,
+                admin: currentName,
+                username: currentUser,
+                item: document.getElementById('item').value,
+                amount: parseFloat(document.getElementById('amount').value),
+                notes: document.getElementById('notes').value || '-',
+                timestamp: new Date().toISOString()
+            };
+
+            sales.unshift(sale);
+            localStorage.setItem('wishShoppeSales', JSON.stringify(sales));
+
+            // Reset form
+            document.getElementById('amount').value = '';
+            document.getElementById('notes').value = '';
+            document.getElementById('item').value = '';
+            document.getElementById('date').valueAsDate = new Date();
+
+            displaySales();
+            updateStats();
+            showToast('success', '✅', 'Sale added successfully!');
+        });
+
+        // Search
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = sales.filter(sale =>
+                sale.admin.toLowerCase().includes(searchTerm) ||
+                sale.item.toLowerCase().includes(searchTerm) ||
+                sale.date.includes(searchTerm)
+            );
+            displaySales(filtered);
+        });
+
+        function displaySales(salesToDisplay = sales) {
+            const tbody = document.getElementById('salesBody');
+            const isAdmin = currentRole === 'admin';
+
+            if (salesToDisplay.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="${isAdmin ? '6' : '5'}" class="empty-state">
+                            <div class="empty-icon">📭</div>
+                            <h3>No sales found</h3>
+                            <p>Try adjusting your search or filter</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = salesToDisplay.map(sale => `
+                <tr>
+                    <td>${sale.date}</td>
+                    <td><strong>${sale.admin}</strong></td>
+                    <td>${sale.item}</td>
+                    <td class="amount-cell">₱${sale.amount.toFixed(2)}</td>
+                    <td>${sale.notes}</td>
+                    ${isAdmin ? `
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editSale(${sale.id})">
+                            ✏️ Edit
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteSale(${sale.id})">
+                            🗑️ Delete
+                        </button>
+                    </td>
+                    ` : ''}
+                </tr>
+            `).join('');
+        }
+
+        function updateStats() {
+            const total = sales.reduce((sum, sale) => sum + sale.amount, 0);
+            const today = new Date().toISOString().split('T')[0];
+            const todayTotal = sales
+                .filter(sale => sale.date === today)
+                .reduce((sum, sale) => sum + sale.amount, 0);
+            const avg = sales.length > 0 ? total / sales.length : 0;
+
+            document.getElementById('totalSales').textContent = `₱${total.toFixed(2)}`;
+            document.getElementById('todaySales').textContent = `₱${todayTotal.toFixed(2)}`;
+            document.getElementById('totalTransactions').textContent = sales.length;
+            document.getElementById('avgSale').textContent = `₱${avg.toFixed(2)}`;
+        }
+
+        function editSale(id) {
+            const sale = sales.find(s => s.id === id);
+            if (!sale) return;
+
+            document.getElementById('editSaleId').value = sale.id;
+            document.getElementById('editDate').value = sale.date;
+            document.getElementById('editAdmin').value = sale.admin;
+            document.getElementById('editItem').value = sale.item;
+            document.getElementById('editAmount').value = sale.amount;
+            document.getElementById('editNotes').value = sale.notes;
+
+            document.getElementById('editModal').classList.add('show');
+        }
+
+        document.getElementById('editSaleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const id = parseInt(document.getElementById('editSaleId').value);
+            const saleIndex = sales.findIndex(s => s.id === id);
+
+            if (saleIndex !== -1) {
+                sales[saleIndex] = {
+                    ...sales[saleIndex],
+                    date: document.getElementById('editDate').value,
+                    admin: document.getElementById('editAdmin').value,
+                    item: document.getElementById('editItem').value,
+                    amount: parseFloat(document.getElementById('editAmount').value),
+                    notes: document.getElementById('editNotes').value || '-'
+                };
+
+                localStorage.setItem('wishShoppeSales', JSON.stringify(sales));
+                displaySales();
+                updateStats();
+                closeEditModal();
+                showToast('success', '✅', 'Sale updated successfully!');
+            }
+        });
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('show');
+        }
+
+        function deleteSale(id) {
+            if (confirm('Are you sure you want to delete this sale?')) {
+                sales = sales.filter(sale => sale.id !== id);
+                localStorage.setItem('wishShoppeSales', JSON.stringify(sales));
+                displaySales();
+                updateStats();
+                showToast('info', 'ℹ️', 'Sale deleted');
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('⚠️ Delete ALL sales data? This cannot be undone!')) {
+                if (confirm('Are you absolutely sure?')) {
+                    localStorage.removeItem('wishShoppeSales');
+                    sales = [];
+                    displaySales();
+                    updateStats();
+                    showToast('info', 'ℹ️', 'All data cleared');
+                }
+            }
+        }
+
+        function exportToCSV() {
+            if (sales.length === 0) {
+                showToast('error', '❌', 'No data to export!');
+                return;
+            }
+
+            let csv = 'Date,Admin,Item,Amount,Notes\n';
+            sales.forEach(sale => {
+                csv += `${sale.date},${sale.admin},"${sale.item}",₱${sale.amount.toFixed(2)},"${sale.notes}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `wish-shoppe-sales-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            showToast('success', '✅', 'CSV exported!');
+        }
+
+        function filterSales(filter) {
+            currentFilter = filter;
+
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+
+            let filtered = sales;
+
+            if (filter === 'today') {
+                filtered = sales.filter(sale => sale.date === todayStr);
+            } else if (filter === 'week') {
+                const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                const weekAgoStr = weekAgo.toISOString().split('T')[0];
+                filtered = sales.filter(sale => sale.date >= weekAgoStr);
+            }
+
+            displaySales(filtered);
+        }
+
+        // Admin Panel Functions
+        function openAdminPanel() {
+            loadUsers();
+            document.getElementById('adminModal').classList.add('show');
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminModal').classList.remove('show');
+        }
+
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem('wishShoppeUsers'));
+            const tbody = document.getElementById('usersTableBody');
+
+            tbody.innerHTML = Object.keys(users).map(username => {
+                const user = users[username];
+                return `
+                    <tr>
+                        <td><strong>${username}</strong></td>
+                        <td>${user.name}</td>
+                        <td><span class="role-badge role-${user.role}">${user.role}</span></td>
+                        <td>
+                            ${username !== 'admin' ? `
+                                <button class="action-btn delete-btn" onclick="deleteUser('${username}')">
+                                    🗑️ Delete
+                                </button>
+                            ` : '<em>Protected</em>'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('addUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const users = JSON.parse(localStorage.getItem('wishShoppeUsers'));
+            const username = document.getElementById('newUsername').value.trim();
+            const password = document.getElementById('newPassword').value;
+            const name = document.getElementById('newName').value.trim();
+            const role = document.getElementById('newRole').value;
+
+            if (users[username]) {
+                showToast('error', '❌', 'Username already exists!');
+                return;
+            }
+
+            users[username] = {
+                password: password,
+                name: name,
+                role: role
+            };
+
+            localStorage.setItem('wishShoppeUsers', JSON.stringify(users));
+
+            document.getElementById('addUserForm').reset();
+            loadUsers();
+            showToast('success', '✅', 'User added successfully!');
+        });
+
+        function deleteUser(username) {
+            if (confirm(`Delete user "${username}"?`)) {
+                const users = JSON.parse(localStorage.getItem('wishShoppeUsers'));
+                delete users[username];
+                localStorage.setItem('wishShoppeUsers', JSON.stringify(users));
+                loadUsers();
+                showToast('info', 'ℹ️', 'User deleted');
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }
+
+        function showToast(type, icon, message) {
+            const toast = document.getElementById('toast');
+            const toastIcon = document.getElementById('toastIcon');
+            const toastMessage = document.getElementById('toastMessage');
+
+            toast.className = `toast ${type}`;
+            toastIcon.textContent = icon;
+            toastMessage.textContent = message;
+
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Close modals on outside click
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('show');
+            }
+        }
+    </script>
+</body>
+</html>
